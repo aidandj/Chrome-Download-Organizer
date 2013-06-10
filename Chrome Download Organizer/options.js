@@ -54,24 +54,11 @@ function tableCreate(){
 
 // Restores select box state to saved value from localStorage.
 function restore_options() {
-    var favorite = localStorage["favorite_color"];
-    if (!favorite) {
-    //    return;
-    }
-    var select = document.getElementById("color");
-    for (var i = 0; i < select.children.length; i++) {
-        var child = select.children[i];
-        if (child.value == favorite) {
-            child.selected = "true";
-            break;
-        }
-    }
     tableCreate();
     //    for (var i = 0; i < localStorage.length; ++i) {
     //        localstorage[i]
     //    }
 }
 document.addEventListener('DOMContentLoaded', restore_options);
-document.querySelector('#save').addEventListener('click', save_options);
 document.querySelector('#add').addEventListener('click', addFilter);
 document.querySelector('#clear').addEventListener('click', clearStorage);
