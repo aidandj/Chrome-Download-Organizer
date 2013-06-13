@@ -10,8 +10,13 @@
   },
   "permissions": [
     "downloads",
-    "storage"
+    "storage",
+    "tabs"
   ],
+    "browser_action": {
+        "default_title": "Options",
+        "default_icon" : "SigIconLightBlue16.png"
+    },
   "icons": { "16": "SigIconLightBlue16.png",
            "48": "SigIconLightBlue48.png",
           "128": "SigIconLightBlue128.png" },
