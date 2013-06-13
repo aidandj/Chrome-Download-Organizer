@@ -245,7 +245,7 @@ footer {
 .website {
     position:absolute;
     bottom:10;
-    left:10;
+    left:58;
 }
 
 @media print, screen and (max-width: 480px) {
@@ -281,7 +281,7 @@ footer {
 	border:1px solid #dcdcdc;
 	display:inline-block;
 	color:#777777;
-    font:14px/1.5 Lato, "Helvetica Neue", Helvetica, Arial, sans-serif
+    font:14px/1.5 Lato, "Helvetica Neue", Helvetica, Arial, sans-serif;
 	font-weight:bold;
 	padding:6px 24px;
 	text-decoration:none;

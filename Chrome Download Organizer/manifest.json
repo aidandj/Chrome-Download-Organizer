@@ -9,7 +9,8 @@
     "persistent": false
   },
   "permissions": [
-    "downloads"
+    "downloads",
+    "storage"
   ],
   "manifest_version": 2
 }
