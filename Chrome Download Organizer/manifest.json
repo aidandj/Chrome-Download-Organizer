@@ -12,5 +12,8 @@
     "downloads",
     "storage"
   ],
+  "icons": { "16": "SigIconLightBlue16.png",
+           "48": "SigIconLightBlue48.png",
+          "128": "SigIconLightBlue128.png" },
   "manifest_version": 2
 }
