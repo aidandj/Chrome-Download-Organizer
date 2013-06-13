@@ -6,7 +6,13 @@ setTimeout(function() {
            status.innerHTML = "";
            }, 1750);
 }
-    
+
+//Gets version number
+function getVersion() {
+    var manifestData = chrome.app.getDetails();
+    return manifestData.version;
+}
+
 // Adds a website filter
 function addFilter() {
     if(document.getElementById('url').value==''){
@@ -167,7 +173,7 @@ function checkboxes() {
 // Restores table state to saved value from localStorage.
 function restore_options() {
     tableCreate();
-    
+    document.getElementById('version').innerHTML += getVersion();
     chrome.storage.local.get(null, function(items) {
                             localStorage.images = items.images;
                             localStorage.torrents = items.torrents;
