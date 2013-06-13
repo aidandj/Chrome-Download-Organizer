@@ -3,7 +3,7 @@ chrome.downloads.onDeterminingFilename.addListener(function(item, suggest) {
                                                    var ifilename = item.filename;
                                                    var jfilename = item.filename;
     for (var i = 0; i < localStorage.length; ++i){
-                                                   if((localStorage.key(i) == 'torrents') || (localStorage.key(i) == 'images') || (localStorage.key(i) == 'music')) {
+                                                   if((localStorage.key(i) == 'torrents') || (localStorage.key(i) == 'images') || (localStorage.key(i) == 'music') || (localStorage.key(i) == 'docs') || (localStorage.key(i) == 'arch')) {
                                                    continue;
                                                    }
         if (current.indexOf(localStorage.key(i)) !== -1){
@@ -21,6 +21,9 @@ chrome.downloads.onDeterminingFilename.addListener(function(item, suggest) {
                                                    }
                                                    if(localStorage.docs && ((jfilename.indexOf('.doc') !== -1) || (jfilename.indexOf('.ppt') !== -1) || (jfilename.indexOf('.rtf') !== -1) || (jfilename.indexOf('.xls') !== -1) || (jfilename.indexOf('.pdf') !== -1) || (jfilename.indexOf('.txt') !== -1) || (jfilename.indexOf('.xls') !== -1))) {
                                                    ifilename = 'Documents/' + ifilename;
+                                                   }
+                                                   if(localStorage.arch && ((jfilename.indexOf('.zip') !== -1) || (jfilename.indexOf('.rar') !== -1))) {
+                                                   ifilename = 'Archives/' + ifilename;
                                                    }
 
      suggest({filename: ifilename, overwrite: false});

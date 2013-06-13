@@ -29,7 +29,7 @@ function clearStorage() {
     localStorage.clear();
     }
     for(var i = 0; i < localStorage.length; i++){
-        if((localStorage.key(i) == 'torrents') || (localStorage.key(i) == 'images') || (localStorage.key(i) == 'music') || (localStorage.key(i) == 'docs')) {
+        if((localStorage.key(i) == 'torrents') || (localStorage.key(i) == 'images') || (localStorage.key(i) == 'music') || (localStorage.key(i) == 'docs') || (localStorage.key(i) == 'arch')) {
             continue;
         }
         if(document.getElementById('checkbox' + localStorage.key(i)).checked){
@@ -58,7 +58,7 @@ function tableCreate(){
     tblbody.style.width='95%';
     tbl.style.width='95%';
     for(var i = 0; i < localStorage.length; i++){
-        if((localStorage.key(i) == 'torrents') || (localStorage.key(i) == 'images') || (localStorage.key(i) == 'music') || (localStorage.key(i) == 'docs')) {
+        if((localStorage.key(i) == 'torrents') || (localStorage.key(i) == 'images') || (localStorage.key(i) == 'music') || (localStorage.key(i) == 'docs') || (localStorage.key(i) == 'arch')) {
             continue;
         }
         var tr = tbl.insertRow();
@@ -154,6 +154,10 @@ function checkboxes() {
                             // Notify that we saved.
                             message('Settings saved');
                             });
+    chrome.storage.local.set({'arch': document.getElementById('filtercheckbox.arch').checked}, function() {
+                             // Notify that we saved.
+                             message('Settings saved');
+                             });
     tableCreate();
     //saveStorage();
 
@@ -169,11 +173,13 @@ function restore_options() {
                             localStorage.torrents = items.torrents;
                             localStorage.music = items.music;
                             localStorage.docs = items.docs;
+                             localStorage.arch = items.arch;
                              document.getElementById('filtercheckbox.jpg').checked = items.images;
                              document.getElementById('filtercheckbox.torrent').checked = items.torrents;
                              document.getElementById('filtercheckbox.mp3').checked = items.music;
                              document.getElementById('filtercheckbox.doc').checked = items.docs;
-                             });
+                            document.getElementById('filtercheckbox.arch').checked = items.arch;
+                            });
 
    }
 document.addEventListener('DOMContentLoaded', restore_options);
@@ -184,3 +190,4 @@ document.getElementById('filtercheckbox.jpg').addEventListener('click', checkbox
 document.getElementById('filtercheckbox.torrent').addEventListener('click', checkboxes);
 document.getElementById('filtercheckbox.mp3').addEventListener('click', checkboxes);
 document.getElementById('filtercheckbox.doc').addEventListener('click', checkboxes);
+document.getElementById('filtercheckbox.arch').addEventListener('click', checkboxes);
