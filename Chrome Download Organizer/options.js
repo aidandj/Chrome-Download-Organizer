@@ -1,3 +1,20 @@
+//Google analytics code
+var _gaCode = 'UA-41728018-1';
+
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', _gaCode]);
+_gaq.push(['_trackPageview']);
+
+(function() {
+ var ga = document.createElement('script');
+ ga.type = 'text/javascript';
+ ga.async = true;
+ ga.src = 'https://ssl.google-analytics.com/ga.js';
+ var s = document.getElementsByTagName('script')[0];
+ s.parentNode.insertBefore(ga, s);
+ })();
+
+
 //Debugs for me
 function message(msg) {
 var status = document.getElementById('status');
@@ -61,8 +78,8 @@ function tableCreate(){
     var tblbody = document.getElementById('table');;
     tblbody.innerHTML = '';
     var tbl  = document.createElement('table');
-    tblbody.style.width='95%';
-    tbl.style.width='95%';
+    //tblbody.style.width='95%';
+    //tbl.style.width='95%';
     for(var i = 0; i < localStorage.length; i++){
         if((localStorage.key(i) == 'torrents') || (localStorage.key(i) == 'images') || (localStorage.key(i) == 'music') || (localStorage.key(i) == 'docs') || (localStorage.key(i) == 'arch')) {
             continue;
@@ -126,21 +143,44 @@ function saveStorage() {
     for (var i = 0; i < localStorage.length; ++i){
         obj[localStorage.key(i)] = localStorage[localStorage.key(i)];
     }
-    chrome.storage.sync.set(obj, function() {
-                            message('Settings Sync');
+    chrome.storage.local.get(null, function(items) {
+                             chrome.storage.sync.set(items, function() {
+                                                     message('Settings Sync');
+                                                     });
                              });
+    
+
 }
 
 //sync back (not functional)
-//function restoreStorage() {
-//    chrome.storage.local.get(null, function(items) {
-//                             for (var i = 0; i < items.length; ++i){
-//                             localStorage.key(i) = localStorage[localStorage.key(i)];
-//                             }
-//
-//                             });
-//
-//}
+function restoreStorage() {
+
+    chrome.storage.sync.get(null, function(items) {
+                                console.log(items.images);
+                            chrome.storage.local.set({'images': items.images}, function() {
+                                                     // Notify that we saved.
+                                                     message('Settings saved');
+                                                     });
+                            chrome.storage.local.set({'torrents': items.torrents}, function() {
+                                                     // Notify that we saved.
+                                                     message('Settings saved');
+                                                     });
+                            chrome.storage.local.set({'music': items.music}, function() {
+                                                     // Notify that we saved.
+                                                     message('Settings saved');
+                                                     });
+                            chrome.storage.local.set({'docs': items.docs}, function() {
+                                                     // Notify that we saved.
+                                                     message('Settings saved');
+                                                     });
+                            chrome.storage.local.set({'arch': items.arch}, function() {
+                                                     // Notify that we saved.
+                                                     message('Settings saved');
+                                                     });
+                              });
+
+
+}
 
 //Sets filters based on checkboxes
 function checkboxes() {
@@ -173,6 +213,7 @@ function checkboxes() {
 // Restores table state to saved value from localStorage.
 function restore_options() {
     tableCreate();
+    restoreStorage();
     document.getElementById('version').innerHTML += getVersion();
     chrome.storage.local.get(null, function(items) {
                             localStorage.images = items.images;
@@ -188,6 +229,8 @@ function restore_options() {
                             });
 
    }
+
+
 document.addEventListener('DOMContentLoaded', restore_options);
 document.querySelector('#add').addEventListener('click', addFilter);
 document.querySelector('#clear').addEventListener('click', clearStorage);

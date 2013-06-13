@@ -6,7 +6,25 @@
     <body>
         <a  target="_blank" href="http://www.aidandj.com"><img src="/SigIconLightBlue.svg" title="Aidan Daly-Jensen" height="64" width="64" alt="Aidan Daly-Jensen"></a>
         <br>
-        <p><b>Chrome Download Organizer: </b>Type in a full or partial url that the downloads will be sorted from, then a folder name for them to be downloaded to. If the folder does not exist it will be created.</p>
+        <div class="description" id="desc"><b>Chrome Download Organizer: </b><br><br>Type in a full or partial url that the downloads will be sorted from, then a folder name for them to be downloaded to. If the folder does not exist it will be created. You can filter by URL, filetype, or both.</div>
+            
+        <br>
+        <div class="filterholder">
+        <div id="filter">
+            <p><u>Filter by File Type:</u>
+            </div>
+            <div id="filters">
+        <input type="checkbox" name="name" value="value" id="filtercheckbox.jpg"> Images (.jpg, .png)
+            <input type="checkbox" name="name" value="value" id="filtercheckbox.torrent"> Torrent Files
+                <input type="checkbox" name="name" value="value" id="filtercheckbox.mp3"> Music Files (.mp3, .wav)
+                    <input type="checkbox" name="name" value="value" id="filtercheckbox.doc"> Documents (.doc, .pdf, etc)
+                        <input type="checkbox" name="name" value="value" id="filtercheckbox.arch"> Archives
+                            </p>
+        
+            </div>
+        </div>
+        </div>
+
         
         Download URL contains:
         <input type="text" id="url"/>
@@ -21,15 +39,8 @@
          <p>       <a href="#" class="classname" id="clear">Clear Selected Filters</a>
         </p>
 
-        <u>Filter by File Type:</u>
-        <input type="checkbox" name="name" value="value" id="filtercheckbox.jpg"> Images (.jpg, .png)
-        <input type="checkbox" name="name" value="value" id="filtercheckbox.torrent"> Torrent Files
-        <input type="checkbox" name="name" value="value" id="filtercheckbox.mp3"> Music Files (.mp3, .wav)
-         <input type="checkbox" name="name" value="value" id="filtercheckbox.doc"> Documents (.doc, .pdf, etc)
-                     <input type="checkbox" name="name" value="value" id="filtercheckbox.arch"> Archives
-            <br>
-<br>
-           
+
+                      
              <p><a href="mailto:aidandj@gmail.com">E-mail me</a> with questions, comments, or Suggestions
             </p>
                          <p>
@@ -40,7 +51,7 @@
             <a  target="_blank" href="http://www.aidandj.com">Visit My Website</a>
         </div>
         <div class="donate">
-            <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+            <form target="_blank" action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
                 <input type="hidden" name="cmd" value="_s-xclick">
                     <input type="hidden" name="encrypted" value="-----BEGIN PKCS7-----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-----END PKCS7-----
                         ">

@@ -1,7 +1,7 @@
 {
   "name": "Download Organizer for Google Chrome™",
   "description": "Allows you to filter downloads into folders based off of website url's and file types.",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "minimum_chrome_version": "26.0.1428",
   "options_page": "options.html",
   "background": {
@@ -20,5 +20,6 @@
   "icons": { "16": "SigIconLightBlue16.png",
            "48": "SigIconLightBlue48.png",
           "128": "SigIconLightBlue128.png" },
+  "content_security_policy": "script-src 'self' https://ssl.google-analytics.com; object-src 'self'",
   "manifest_version": 2
 }

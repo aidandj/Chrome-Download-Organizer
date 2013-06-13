@@ -50,6 +50,26 @@ a small {
   margin:0 auto;
 }
 
+#desc {
+    width:95%;
+    margin:0 0 0px;
+}
+
+.filterholder {
+    display:table;
+    width:95%;
+}
+
+#filter {
+    display:table-cell;
+    width:10%;
+}
+
+#filters {
+    display:table-cell;;
+}
+
+
 blockquote {
   border-left:1px solid #e5e5e5;
   margin:0;
@@ -72,7 +92,7 @@ pre {
 }
 
 table {
-  width:100%;
+  width:95%;
   border-collapse:collapse;
 }
 
