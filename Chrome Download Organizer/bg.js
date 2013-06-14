@@ -5,7 +5,7 @@ function openOrFocusOptionsPage() {
                       for (var i=0; i < extensionTabs.length; i++) {
                       if (optionsUrl == extensionTabs[i].url) {
                       found = true;
-                      console.log("tab id: " + extensionTabs[i].id);
+                      //console.log("tab id: " + extensionTabs[i].id);
                       chrome.tabs.update(extensionTabs[i].id, {"selected": true});
                       }
                       }

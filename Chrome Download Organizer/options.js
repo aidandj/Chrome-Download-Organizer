@@ -17,11 +17,11 @@ _gaq.push(['_trackPageview']);
 
 //Debugs for me
 function message(msg) {
-var status = document.getElementById('status');
-status.innerHTML = msg;
-setTimeout(function() {
-           status.innerHTML = "";
-           }, 1750);
+    var status = document.getElementById('status');
+    status.innerHTML = msg;
+    setTimeout(function() {
+               status.innerHTML = "";
+               }, 1750);
 }
 
 //Gets version number
@@ -32,38 +32,68 @@ function getVersion() {
 
 // Adds a website filter
 function addFilter() {
+    var _url = document.getElementById('url').value;
+    var _folder = document.getElementById('rename').value;
+    //console.log(_url);
+    var data = {};
+    data[_url] = _folder;
     if(document.getElementById('url').value==''){
         return;
     }
     if(document.getElementById('rename').value==''){
         return;
     }
-    localStorage[document.getElementById('url').value] = document.getElementById('rename').value;
+    chrome.storage.local.set(data, function() {
+                             // Notify that we saved.
+                             message('Settings saved');
+                             debugChanges(data, 'Set');
+                             });
+    
     document.getElementById('url').value='';
     document.getElementById('rename').value='';
-    //document.location.reload(true);
     tableCreate();
-    saveStorage();
+    //saveStorage();
 }
 
 //Clear saved filters
 function clearStorage() {
+    var data = new Array();
     if(document.getElementById('checkboxall').checked){
-    localStorage.clear();
+        chrome.storage.local.clear(function() {
+                                   // Notify that we saved.
+                                   message('Settings saved');
+                                   debugChanges(data, 'Local Set');
+                                   });
+        chrome.storage.sync.clear(function() {
+                                  // Notify that we saved.
+                                  message('Settings saved');
+                                  debugChanges(data, 'Sync Set');
+                                  });
+        document.getElementById('filtercheckbox.jpg').checked = false;
+        document.getElementById('filtercheckbox.torrent').checked = false;
+        document.getElementById('filtercheckbox.mp3').checked = false;
+        document.getElementById('filtercheckbox.doc').checked = false;
+        document.getElementById('filtercheckbox.arch').checked = false;
+        
+        
     }
-    for(var i = 0; i < localStorage.length; i++){
-        if((localStorage.key(i) == 'torrents') || (localStorage.key(i) == 'images') || (localStorage.key(i) == 'music') || (localStorage.key(i) == 'docs') || (localStorage.key(i) == 'arch')) {
-            continue;
-        }
-        if(document.getElementById('checkbox' + localStorage.key(i)).checked){
-            localStorage.removeItem(localStorage.key(i));
-            i = 0;
-            }
-    }
-    //document.location.reload(true);
-    tableCreate();
-    saveStorage();
+    chrome.storage.local.get(null, function(items) {
+                             for(key in items) {
+                             if((key == 'torrents') || (key == 'images') || (key == 'music') || (key == 'docs') || (key == 'arch')) {
+                             continue;
+                             }
+                             if(document.getElementById('checkbox' + key).checked){
+                             chrome.storage.local.remove(key, function() {
+                                                         //console.log('removed ' + key);
+                                                         //tableCreate();
+                                                         });
+                             
+                             }
+                             }
+                             });
+    //saveStorage();
 }
+
 
 //Catches enter in the second box
 function enterPress(e) {
@@ -75,138 +105,176 @@ function enterPress(e) {
 
 // Creates a table
 function tableCreate(){
-    var tblbody = document.getElementById('table');;
-    tblbody.innerHTML = '';
-    var tbl  = document.createElement('table');
-    //tblbody.style.width='95%';
-    //tbl.style.width='95%';
-    for(var i = 0; i < localStorage.length; i++){
-        if((localStorage.key(i) == 'torrents') || (localStorage.key(i) == 'images') || (localStorage.key(i) == 'music') || (localStorage.key(i) == 'docs') || (localStorage.key(i) == 'arch')) {
-            continue;
-        }
-        var tr = tbl.insertRow();
-        for(var j = 0; j < 3; j++){
-            if(i==localStorage.length && j==3){
-                break;
-            } else {
-                var td = tr.insertCell();
-                td.style.border='2px solid black';
-                td.style.width='33%';
-                if(j == 2){
-                    td.appendChild(document.createTextNode(localStorage.key(i)));
-                }
-                if(j == 1){
-                    td.appendChild(document.createTextNode(localStorage[localStorage.key(i)]))
-                }
-                if(j == 0) {
-                    var checkbox = document.createElement('input');
-                    checkbox.type = "checkbox";
-                    checkbox.name = "name";
-                    checkbox.value = "value";
-                    checkbox.id = "checkbox" + localStorage.key(i);
-                    td.style.width='10%';
-                    td.appendChild(checkbox);
-                    td.appendChild(document.createTextNode("Remove"));
-                }
-            }
-        }
-    }
-    var tr = tbl.insertRow();
-    var td = tr.insertCell();
-    
-    var checkbox = document.createElement('input');
-    checkbox.type = "checkbox";
-    checkbox.name = "name";
-    checkbox.value = "value";
-    checkbox.id = "checkboxall";
-    td.style.width='10%';
-    td.style.border='2px solid black';
-    td.appendChild(checkbox);
-    td.innerHTML += "<b><u>Remove All</u></b>";
-    var td = tr.insertCell();
-    td.style.width='33%';
-    td.style.border='2px solid black';
-    td.appendChild(document.createTextNode(""));
-    td.innerHTML = "<b><u>Folder Name:</u></b>";
-    var td = tr.insertCell();
-    td.style.width='33%';
-    td.style.border='2px solid black';
-    td.appendChild(document.createTextNode(""));
-    td.innerHTML = "<b><u>URL:</u></b>";
-    tblbody.appendChild(tbl);
+    chrome.storage.local.get(null, function(storage) {
+                             var tblbody = document.getElementById('table');;
+                             tblbody.innerHTML = '';
+                             var tbl  = document.createElement('table');
+                             for(key in storage){
+                             if((key == 'torrents') || (key == 'images') || (key == 'music') || (key == 'docs') || (key == 'arch')) {
+                             continue;
+                             }
+                             var tr = tbl.insertRow();
+                             for(var j = 0; j < 3; j++){
+                             if(j==3){
+                             break;
+                             } else {
+                             var td = tr.insertCell();
+                             td.style.border='2px solid black';
+                             td.style.width='33%';
+                             if(j == 2){
+                             td.appendChild(document.createTextNode(key));
+                             }
+                             if(j == 1){
+                             td.appendChild(document.createTextNode(storage[key]))
+                             }
+                             if(j == 0) {
+                             var checkbox = document.createElement('input');
+                             checkbox.type = "checkbox";
+                             checkbox.name = "name";
+                             checkbox.value = "value";
+                             checkbox.id = "checkbox" + key;
+                             td.style.width='10%';
+                             td.appendChild(checkbox);
+                             td.appendChild(document.createTextNode("Remove"));
+                             }
+                             }
+                             }
+                             }
+                             var tr = tbl.insertRow();
+                             var td = tr.insertCell();
+                             var checkbox = document.createElement('input');
+                             checkbox.type = "checkbox";
+                             checkbox.name = "name";
+                             checkbox.value = "value";
+                             checkbox.id = "checkboxall";
+                             td.style.width='10%';
+                             td.style.border='2px solid black';
+                             td.appendChild(checkbox);
+                             td.innerHTML += "<b><u>Remove All</u></b>";
+                             var td = tr.insertCell();
+                             td.style.width='33%';
+                             td.style.border='2px solid black';
+                             td.appendChild(document.createTextNode(""));
+                             td.innerHTML = "<b><u>Folder Name:</u></b>";
+                             var td = tr.insertCell();
+                             td.style.width='33%';
+                             td.style.border='2px solid black';
+                             td.appendChild(document.createTextNode(""));
+                             td.innerHTML = "<b><u>URL:</u></b>";
+                             tblbody.appendChild(tbl);
+                             });
     return
 }
 
-//sync accross accounts
-function saveStorage() {
-    var obj = {};
-    for (var i = 0; i < localStorage.length; ++i){
-        obj[localStorage.key(i)] = localStorage[localStorage.key(i)];
-    }
-    chrome.storage.local.get(null, function(items) {
-                             chrome.storage.sync.set(items, function() {
-                                                     message('Settings Sync');
-                                                     });
-                             });
+//sync back
+function restoreStorage() {
     
-
+    chrome.storage.sync.get(null, function(items) {
+                             chrome.storage.local.set(items, function() {
+                                                      //console.log("synced");
+                                                      });
+                             
+                                                          });
 }
 
-//sync back (not functional)
-function restoreStorage() {
+chrome.storage.onChanged.addListener(function(changes, namespace) {
+                                     for(key in changes) {
+                                     if(key == 'torrents') {
+                                        document.getElementById('filtercheckbox.torrent').checked = changes['torrents'].newValue;
 
-    chrome.storage.sync.get(null, function(items) {
-                                console.log(items.images);
-                            chrome.storage.local.set({'images': items.images}, function() {
-                                                     // Notify that we saved.
-                                                     message('Settings saved');
-                                                     });
-                            chrome.storage.local.set({'torrents': items.torrents}, function() {
-                                                     // Notify that we saved.
-                                                     message('Settings saved');
-                                                     });
-                            chrome.storage.local.set({'music': items.music}, function() {
-                                                     // Notify that we saved.
-                                                     message('Settings saved');
-                                                     });
-                            chrome.storage.local.set({'docs': items.docs}, function() {
-                                                     // Notify that we saved.
-                                                     message('Settings saved');
-                                                     });
-                            chrome.storage.local.set({'arch': items.arch}, function() {
-                                                     // Notify that we saved.
-                                                     message('Settings saved');
-                                                     });
-                              });
+                                        
+                                        }
+                                        if(key == 'images') {
+                                        document.getElementById('filtercheckbox.jpg').checked = changes['images'].newValue;
+                                        
+                                        }if(key == 'music') {
+                                        document.getElementById('filtercheckbox.mp3').checked = changes['music'].newValue;
+                                        
+                                        }
+                                        if(key == 'docs') {
+                                        document.getElementById('filtercheckbox.doc').checked = changes['docs'].newValue;
+                                        
+                                        }
+                                        if(key == 'arch') {
+                                        document.getElementById('filtercheckbox.arch').checked = changes['arch'].newValue;
+                                     
+                                     }
+                                    if((namespace == 'local') && (changes[key].newValue == null)) {
+                                     localStorage.removeItem(key);
+                                     //console.log("Removed " + key +':'+changes[key].oldValue + 'localstorage now ' + localStorage[key]);
+                                     chrome.storage.sync.remove(key, function() {
+                                                                 //console.log('removed ' + key);
+                                                                 //tableCreate();
+                                                                 });                                     
+                                     } else if((namespace == 'local') && (changes[key].newValue !== null)){
+                                     var data = {};
+                                     data[key] = changes[key].newValue;
+                                               chrome.storage.sync.set(data , function() {
+                                                                        // Notify that we saved.
+                                                                        //message('Settings saved');
+                                                                        });
+                                               localStorage[key] = changes[key].newValue;
+                                               //console.log("Added " + key +':'+changes[key].newValue + 'localstorage now ' + localStorage[key]);
 
+                                               }
+                                     else if((namespace == 'sync') && (changes[key].newValue == null)) {
+                                     localStorage.removeItem(key);
+                                     //console.log("Removed " + key +':'+changes[key].oldValue + 'localstorage now ' + localStorage[key]);
+                                     chrome.storage.local.remove(key, function() {
+                                                                //console.log('removed ' + key);
+                                                                //tableCreate();
+                                                                });                                     
+                                     } else if((namespace == 'sync') && (changes[key].newValue !== null)){
+                                     var data = {};
+                                     data[key] = changes[key].newValue;
+                                     chrome.storage.local.set(data , function() {
+                                                              // Notify that we saved.
+                                                              //message('Settings saved');
+                                                              });
+                                     localStorage[key] = changes[key].newValue;
+                                     //console.log("Added " + key +':'+changes[key].newValue + 'localstorage now ' + localStorage[key]);
+                                     }
+                                     
+                                     
+                                     //valueChanged(changes["images"].newValue);
+                                     }
+                                     debugChanges(changes, 'onChanged ' + namespace);
+                                     tableCreate();
+                                     updateCheckboxes();
+                                     message("Filters Saved");
+                                     });
 
+// For debugging purposes:
+function debugChanges(changes, namespace) {
+    for (key in changes) {
+        //console.log(namespace + ' Storage change: key='+key+' value='+JSON.stringify(changes[key]));
+    }
 }
 
 //Sets filters based on checkboxes
 function checkboxes() {
     chrome.storage.local.set({'images': document.getElementById('filtercheckbox.jpg').checked}, function() {
-                            // Notify that we saved.
-                            message('Settings saved');
-                            });
+                             // Notify that we saved.
+                             //message('Settings saved');
+                             });
     chrome.storage.local.set({'torrents': document.getElementById('filtercheckbox.torrent').checked}, function() {
-                            // Notify that we saved.
-                            message('Settings saved');
-                            });
+                             // Notify that we saved.
+                             //message('Settings saved');
+                             });
     chrome.storage.local.set({'music': document.getElementById('filtercheckbox.mp3').checked}, function() {
-                            // Notify that we saved.
-                            message('Settings saved');
-                            });
+                             // Notify that we saved.
+                             //message('Settings saved');
+                             });
     chrome.storage.local.set({'docs': document.getElementById('filtercheckbox.doc').checked}, function() {
-                            // Notify that we saved.
-                            message('Settings saved');
-                            });
+                             // Notify that we saved.
+                             //message('Settings saved');
+                             });
     chrome.storage.local.set({'arch': document.getElementById('filtercheckbox.arch').checked}, function() {
                              // Notify that we saved.
-                             message('Settings saved');
+                             //message('Settings saved');
                              });
-    tableCreate();
     //saveStorage();
-
+    
 }
 
 
@@ -215,20 +283,20 @@ function restore_options() {
     tableCreate();
     restoreStorage();
     document.getElementById('version').innerHTML += getVersion();
-    chrome.storage.local.get(null, function(items) {
-                            localStorage.images = items.images;
-                            localStorage.torrents = items.torrents;
-                            localStorage.music = items.music;
-                            localStorage.docs = items.docs;
+    chrome.storage.sync.get(null, function(items) {
+                             localStorage.images = items.images;
+                             localStorage.torrents = items.torrents;
+                             localStorage.music = items.music;
+                             localStorage.docs = items.docs;
                              localStorage.arch = items.arch;
                              document.getElementById('filtercheckbox.jpg').checked = items.images;
                              document.getElementById('filtercheckbox.torrent').checked = items.torrents;
                              document.getElementById('filtercheckbox.mp3').checked = items.music;
                              document.getElementById('filtercheckbox.doc').checked = items.docs;
-                            document.getElementById('filtercheckbox.arch').checked = items.arch;
-                            });
-
-   }
+                             document.getElementById('filtercheckbox.arch').checked = items.arch;
+                             });
+    
+}
 
 
 document.addEventListener('DOMContentLoaded', restore_options);
