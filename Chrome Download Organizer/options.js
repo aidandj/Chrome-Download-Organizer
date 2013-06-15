@@ -3,6 +3,11 @@ var _gaCode = 'UA-41728018-1';
 
 var _gaq = _gaq || [];
 _gaq.push(['_setAccount', _gaCode]);
+_gaq.push(['_setCustomVar',
+           1,
+           'Version: ',
+           getVersion()
+           ]);
 _gaq.push(['_trackPageview']);
 
 (function() {
