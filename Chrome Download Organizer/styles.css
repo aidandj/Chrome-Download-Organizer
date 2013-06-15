@@ -264,8 +264,8 @@ footer {
 
 .website {
     position:absolute;
-    bottom:10;
-    left:58;
+    top:10;
+    right:20;
 }
 
 @media print, screen and (max-width: 480px) {

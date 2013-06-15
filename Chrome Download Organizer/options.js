@@ -99,6 +99,7 @@ function clearStorage() {
 function enterPress(e) {
     if (e.keyCode == 13) {
         addFilter();
+        document.getElementById('url').focus();
         return false;
     }
 }

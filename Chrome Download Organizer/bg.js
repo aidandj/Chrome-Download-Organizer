@@ -55,7 +55,7 @@ chrome.downloads.onDeterminingFilename.addListener(function(item, suggest) {
                                                    if(localStorage.docs && ((jfilename.indexOf('.doc') !== -1) || (jfilename.indexOf('.ppt') !== -1) || (jfilename.indexOf('.rtf') !== -1) || (jfilename.indexOf('.xls') !== -1) || (jfilename.indexOf('.pdf') !== -1) || (jfilename.indexOf('.txt') !== -1) || (jfilename.indexOf('.xls') !== -1))) {
                                                    ifilename = 'Documents/' + ifilename;
                                                    }
-                                                   if(localStorage.arch && ((jfilename.indexOf('.zip') !== -1) || (jfilename.indexOf('.rar') !== -1))) {
+                                                   if(localStorage.arch && ((jfilename.indexOf('.zip') !== -1) || (jfilename.indexOf('.rar') !== -1) || (jfilename.indexOf('.dmg') !== -1))) {
                                                    ifilename = 'Archives/' + ifilename;
                                                    }
 
