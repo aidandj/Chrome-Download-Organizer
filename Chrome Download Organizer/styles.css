@@ -3,7 +3,7 @@
 body {
   padding:50px;
   font:14px/1.5 Lato, "Helvetica Neue", Helvetica, Arial, sans-serif;
-  color:#777;
+  color:#111;
   font-weight:300;
 }
 
@@ -69,6 +69,20 @@ a small {
     display:table-cell;;
 }
 
+.logoholder {
+    display:table;
+}
+
+#status {
+    display:inline-block; 
+   vertical-align:middle;
+   margin:0 20 20px
+}
+
+#logo {
+    display:inline-block; 
+   vertical-align:middle;
+}
 
 blockquote {
   border-left:1px solid #e5e5e5;

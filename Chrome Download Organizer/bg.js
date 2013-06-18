@@ -43,19 +43,20 @@ chrome.downloads.onDeterminingFilename.addListener(function(item, suggest) {
                 ifilename = localStorage[localStorage.key(i)] + '/' + item.filename;
                                                    }
     }
-                                                   if(localStorage.torrents && (jfilename.indexOf('.torrent') !== -1)) {
+                                                   if((localStorage.torrents == 'true') && (jfilename.indexOf('.torrent') !== -1)) {
+                                                   console.log("Torrents added because localStorage.torrents = " + localStorage.torrents);
                                                         ifilename = 'Torrents/' + ifilename;
                                                    }
-                                                   if(localStorage.music && ((jfilename.indexOf('.mp3') !== -1) || (jfilename.indexOf('.wav') !== -1))) {
+                                                   if((localStorage.music == 'true') && ((jfilename.indexOf('.mp3') !== -1) || (jfilename.indexOf('.wav') !== -1))) {
                                                    ifilename = 'Music/' + ifilename;
                                                    }
-                                                   if(localStorage.images && ((jfilename.indexOf('.jpg') !== -1) || (jfilename.indexOf('.png') !== -1))) {
+                                                   if((localStorage.images == 'true') && ((jfilename.indexOf('.jpg') !== -1) || (jfilename.indexOf('.png') !== -1))) {
                                                    ifilename = 'Images/' + ifilename;
                                                    }
-                                                   if(localStorage.docs && ((jfilename.indexOf('.doc') !== -1) || (jfilename.indexOf('.ppt') !== -1) || (jfilename.indexOf('.rtf') !== -1) || (jfilename.indexOf('.xls') !== -1) || (jfilename.indexOf('.pdf') !== -1) || (jfilename.indexOf('.txt') !== -1) || (jfilename.indexOf('.xls') !== -1))) {
+                                                   if((localStorage.docs == 'true') && ((jfilename.indexOf('.doc') !== -1) || (jfilename.indexOf('.ppt') !== -1) || (jfilename.indexOf('.rtf') !== -1) || (jfilename.indexOf('.xls') !== -1) || (jfilename.indexOf('.pdf') !== -1) || (jfilename.indexOf('.txt') !== -1) || (jfilename.indexOf('.xls') !== -1))) {
                                                    ifilename = 'Documents/' + ifilename;
                                                    }
-                                                   if(localStorage.arch && ((jfilename.indexOf('.zip') !== -1) || (jfilename.indexOf('.rar') !== -1) || (jfilename.indexOf('.dmg') !== -1))) {
+                                                   if((localStorage.arch == 'true') && ((jfilename.indexOf('.zip') !== -1) || (jfilename.indexOf('.rar') !== -1) || (jfilename.indexOf('.dmg') !== -1))) {
                                                    ifilename = 'Archives/' + ifilename;
                                                    }
 

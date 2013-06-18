@@ -5,7 +5,7 @@ var _gaq = _gaq || [];
 _gaq.push(['_setAccount', _gaCode]);
 _gaq.push(['_setCustomVar',
            4,
-           'Version: ',
+           'Version',
            getVersion()
            ]);
 _gaq.push(['_trackPageview']);
@@ -39,13 +39,28 @@ function getVersion() {
 function addFilter() {
     var _url = document.getElementById('url').value;
     var _folder = document.getElementById('rename').value;
-    //console.log(_url);
+    console.log(_url);
     var data = {};
     data[_url] = _folder;
     if(document.getElementById('url').value==''){
+        document.getElementById('url').style.backgroundColor = 'red';
+        document.getElementById('url').style.opacity = '0.4';
+        setTimeout(function() {
+                   document.getElementById('url').style.backgroundColor = '';
+                   document.getElementById('url').style.opacity = '1';
+                   }, 1750);
+        document.getElementById('url').focus();
         return;
     }
     if(document.getElementById('rename').value==''){
+        document.getElementById('rename').style.backgroundColor = 'red';
+        document.getElementById('rename').style.opacity = '0.4';
+        document.getElementById('rename').focus();
+        setTimeout(function() {
+                   document.getElementById('rename').style.backgroundColor = '';
+                   document.getElementById('rename').style.opacity = '1';
+                   }, 1750);
+        document.getElementById('rename').focus();
         return;
     }
     chrome.storage.local.set(data, function() {
@@ -62,7 +77,7 @@ function addFilter() {
 
 //Clear saved filters
 function clearStorage() {
-    var data = new Array();
+    //var data = new Array();
     if(document.getElementById('checkboxall').checked){
         chrome.storage.local.clear(function() {
                                    // Notify that we saved.
@@ -96,6 +111,12 @@ function clearStorage() {
                              }
                              }
                              });
+    if (arguments[0] !== null){
+    chrome.storage.local.remove(arguments[0], function() {
+                                console.log('removed ' + key);
+                                //tableCreate();
+                                });
+    }
     //saveStorage();
 }
 
@@ -103,8 +124,8 @@ function clearStorage() {
 //Catches enter in the second box
 function enterPress(e) {
     if (e.keyCode == 13) {
-        addFilter();
         document.getElementById('url').focus();
+        addFilter();
         return false;
     }
 }
@@ -134,6 +155,14 @@ function tableCreate(){
                              td.appendChild(document.createTextNode(storage[key]))
                              }
                              if(j == 0) {
+//                             var removeButton = document.createElement('input');
+//                             removeButton.type = "button";
+//                             removeButton.id = "button" + key;
+//                             removeButton.value = "Remove";
+//                             //removeButton.onClick=clearStorage(key);
+//                             //removeButton.addEventListener('click', clearStorage(key));
+//                             td.appendChild(removeButton);
+                             
                              var checkbox = document.createElement('input');
                              checkbox.type = "checkbox";
                              checkbox.name = "name";
@@ -142,6 +171,7 @@ function tableCreate(){
                              td.style.width='10%';
                              td.appendChild(checkbox);
                              td.appendChild(document.createTextNode("Remove"));
+                             
                              }
                              }
                              }
@@ -220,7 +250,7 @@ chrome.storage.onChanged.addListener(function(changes, namespace) {
                                                                         //message('Settings saved');
                                                                         });
                                                localStorage[key] = changes[key].newValue;
-                                               //console.log("Added " + key +':'+changes[key].newValue + 'localstorage now ' + localStorage[key]);
+                                               //console.log("Added " + key +':'+changes[key].newValue + 'localstorage: ' + key + ' now ' + localStorage[key]);
 
                                                }
                                      else if((namespace == 'sync') && (changes[key].newValue == null)) {
@@ -246,7 +276,7 @@ chrome.storage.onChanged.addListener(function(changes, namespace) {
                                      }
                                      debugChanges(changes, 'onChanged ' + namespace);
                                      tableCreate();
-                                     updateCheckboxes();
+                                     //updateCheckboxes();
                                      message("Filters Saved");
                                      });
 
@@ -309,6 +339,7 @@ document.addEventListener('DOMContentLoaded', restore_options);
 document.querySelector('#add').addEventListener('click', addFilter);
 document.querySelector('#clear').addEventListener('click', clearStorage);
 document.getElementById('rename').addEventListener('keyup', enterPress);
+document.getElementById('url').addEventListener('keyup', enterPress);
 document.getElementById('filtercheckbox.jpg').addEventListener('click', checkboxes);
 document.getElementById('filtercheckbox.torrent').addEventListener('click', checkboxes);
 document.getElementById('filtercheckbox.mp3').addEventListener('click', checkboxes);
