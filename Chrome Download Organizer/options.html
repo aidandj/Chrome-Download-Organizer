@@ -9,27 +9,12 @@
         <div id="status"></div></div>
         
             <br> <br>
-        <div class="description" id="desc"><b>Chrome Download Organizer: </b><br><br>Type in a full or partial url that the downloads will be sorted from, then a folder name for them to be downloaded to. If the folder does not exist it will be created. You can filter by URL, filetype, or both.</div>
+        <div class="description" id="desc"><b>Chrome Download Organizer: </b><br><br>You can define filters with full or partial urls, beginning with <code>'url:'</code> and delimited by <code>','</code> and multiple filetypes, beginning with <code>'filetype:'</code> and delimited by <code>','</code>. You can also choose only urls or filetypes. <br><br>
+            Examples: <pre>url:facebook.com,twitter filetype:jpg</pre><pre>url:deviantart</pre><pre>filetype:jpg,png,tiff,gif,psd</pre> Then choose a folder name for them to be downloaded to. If the folder does not exist it will be created. You can use <code>'/'</code> or <code>'\'</code> to choose subdirectories.</div>
             
         <br>
-        <div class="filterholder">
-        <div id="filter">
-            <p><u>Filter by File Type:</u>
-            </div>
-            <div id="filters">
-        <input type="checkbox" name="name" value="value" id="filtercheckbox.jpg"> Images (.jpg, .png)
-            <input type="checkbox" name="name" value="value" id="filtercheckbox.torrent"> Torrent Files
-                <input type="checkbox" name="name" value="value" id="filtercheckbox.mp3"> Music Files (.mp3, .wav)
-                    <input type="checkbox" name="name" value="value" id="filtercheckbox.doc"> Documents (.doc, .pdf, etc)
-                        <input type="checkbox" name="name" value="value" id="filtercheckbox.arch"> Archives
-                            </p>
         
-            </div>
-        </div>
-        </div>
-
-        
-        Download URL contains:
+        Filter:
         <input type="text" id="url" placeholder="URL"/>
         Folder to download to:
         <input type="text" id="rename" placeholder="Folder"/>
