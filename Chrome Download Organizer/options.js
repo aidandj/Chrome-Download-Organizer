@@ -42,7 +42,7 @@ function addFilter() {
     console.log(_url);
     var data = {};
     data[_url] = _folder;
-    if((document.getElementById('url').value=='') || (!document.getElementById('url').value.match(/^((url:(\w|[\.=?&\/])+(,(\w|[\.=?&\/])+)*){1}( filetype:(\w|[\.=?&\/])+(,(\w|[\.=?&\/])+)*)?)|((filetype:(\w|[\.=?&\/])+(,(\w|[\.=?&\/])+)*){1}( url:(\w|[\.=?&\/])+(,(\w|[\.=?&\/])+)*)?)$/))) {
+    if(document.getElementById('url').value==''){
         document.getElementById('url').style.backgroundColor = 'red';
         document.getElementById('url').style.opacity = '0.4';
         setTimeout(function() {
@@ -89,11 +89,19 @@ function clearStorage() {
                                   message('Settings saved');
                                   debugChanges(data, 'Sync Set');
                               });
+        document.getElementById('filtercheckbox.jpg').checked = false;
+        document.getElementById('filtercheckbox.torrent').checked = false;
+        document.getElementById('filtercheckbox.mp3').checked = false;
+        document.getElementById('filtercheckbox.doc').checked = false;
+        document.getElementById('filtercheckbox.arch').checked = false;
         return;
         
     }
     chrome.storage.local.get(null, function(items) {
        for(key in items) {
+           if((key == 'torrents') || (key == 'images') || (key == 'music') || (key == 'docs') || (key == 'arch')) {
+               continue;
+           }
            if(document.getElementById('checkbox' + key).checked){
                chrome.storage.local.remove(key, function() {
                                                          //console.log('removed ' + key);
@@ -129,6 +137,9 @@ function tableCreate(){
        tblbody.innerHTML = '';
        var tbl  = document.createElement('table');
        for(key in storage){
+           if((key == 'torrents') || (key == 'images') || (key == 'music') || (key == 'docs') || (key == 'arch')) {
+               continue;
+           }
            var tr = tbl.insertRow();
            for(var j = 0; j < 3; j++){
                if(j==3){
@@ -186,7 +197,7 @@ var td = tr.insertCell();
 td.style.width='33%';
 td.style.border='2px solid black';
 td.appendChild(document.createTextNode(""));
-td.innerHTML = "<b><u>Filter:</u></b>";
+td.innerHTML = "<b><u>URL:</u></b>";
 tblbody.appendChild(tbl);
 });
 return
@@ -205,6 +216,24 @@ function restoreStorage() {
 
 chrome.storage.onChanged.addListener(function(changes, namespace) {
    for(key in changes) {
+       if(key == 'torrents') {
+        document.getElementById('filtercheckbox.torrent').checked = changes['torrents'].newValue;
+    }
+    if(key == 'images') {
+        document.getElementById('filtercheckbox.jpg').checked = changes['images'].newValue;
+        
+    }if(key == 'music') {
+        document.getElementById('filtercheckbox.mp3').checked = changes['music'].newValue;
+        
+    }
+    if(key == 'docs') {
+        document.getElementById('filtercheckbox.doc').checked = changes['docs'].newValue;
+        
+    }
+    if(key == 'arch') {
+        document.getElementById('filtercheckbox.arch').checked = changes['arch'].newValue;
+        
+    }
     if((namespace == 'local') && (changes[key].newValue == null)) {
        localStorage.removeItem(key);
                                      //console.log("Removed " + key +':'+changes[key].oldValue + 'localstorage now ' + localStorage[key]);
@@ -263,10 +292,33 @@ function checkboxes() {
     if(document.getElementById('checkboxall').checked) {
       chrome.storage.local.get(null, function(storage) {
         for(key in storage) {
+          if((key == 'torrents') || (key == 'images') || (key == 'music') || (key == 'docs') || (key == 'arch')) {
+           continue;
+         }
          document.getElementById('checkbox' + key).checked = true; 
        }
      });
     }
+    chrome.storage.local.set({'images': document.getElementById('filtercheckbox.jpg').checked}, function() {
+                             // Notify that we saved.
+                             //message('Settings saved');
+                         });
+    chrome.storage.local.set({'torrents': document.getElementById('filtercheckbox.torrent').checked}, function() {
+                             // Notify that we saved.
+                             //message('Settings saved');
+                         });
+    chrome.storage.local.set({'music': document.getElementById('filtercheckbox.mp3').checked}, function() {
+                             // Notify that we saved.
+                             //message('Settings saved');
+                         });
+    chrome.storage.local.set({'docs': document.getElementById('filtercheckbox.doc').checked}, function() {
+                             // Notify that we saved.
+                             //message('Settings saved');
+                         });
+    chrome.storage.local.set({'arch': document.getElementById('filtercheckbox.arch').checked}, function() {
+                             // Notify that we saved.
+                             //message('Settings saved');
+                         });
     //saveStorage();
     
 }
@@ -277,7 +329,20 @@ function restore_options() {
     tableCreate();
     restoreStorage();
     document.getElementById('version').innerHTML += getVersion();
-   }
+    chrome.storage.sync.get(null, function(items) {
+       localStorage.images = items.images;
+       localStorage.torrents = items.torrents;
+       localStorage.music = items.music;
+       localStorage.docs = items.docs;
+       localStorage.arch = items.arch;
+       document.getElementById('filtercheckbox.jpg').checked = items.images;
+       document.getElementById('filtercheckbox.torrent').checked = items.torrents;
+       document.getElementById('filtercheckbox.mp3').checked = items.music;
+       document.getElementById('filtercheckbox.doc').checked = items.docs;
+       document.getElementById('filtercheckbox.arch').checked = items.arch;
+   });
+    
+}
 
 
 document.addEventListener('DOMContentLoaded', restore_options);
@@ -285,3 +350,8 @@ document.querySelector('#add').addEventListener('click', addFilter);
 document.querySelector('#clear').addEventListener('click', clearStorage);
 document.getElementById('rename').addEventListener('keyup', enterPress);
 document.getElementById('url').addEventListener('keyup', enterPress);
+document.getElementById('filtercheckbox.jpg').addEventListener('click', checkboxes);
+document.getElementById('filtercheckbox.torrent').addEventListener('click', checkboxes);
+document.getElementById('filtercheckbox.mp3').addEventListener('click', checkboxes);
+document.getElementById('filtercheckbox.doc').addEventListener('click', checkboxes);
+document.getElementById('filtercheckbox.arch').addEventListener('click', checkboxes);

@@ -34,47 +34,30 @@ chrome.browserAction.onClicked.addListener(function(tab) {
 chrome.downloads.onDeterminingFilename.addListener(function(item, suggest) {
 	var current = item.url;
 	var ifilename = item.filename;
-
+	var jfilename = item.filename;
 	for (var i = 0; i < localStorage.length; ++i){
-		var bFiletypeValid = false;
-		var bUrlValid = false;
-		var urls = undefined;
-		var filetypes = undefined;
-
-		var filterParts = localStorage.key(i).split(' ');
-		for (var j in filterParts) {
-			var temp = filterParts[j].split(':');
-
-			switch(temp[0]) {
-				case "url":
-					urls = temp[1].split(',');
-				break;
-
-				case "filetype":
-					filetypes = temp[1].split(',');
-				break;
-			}
+		if((localStorage.key(i) == 'torrents') || (localStorage.key(i) == 'images') || (localStorage.key(i) == 'music') || (localStorage.key(i) == 'docs') || (localStorage.key(i) == 'arch')) {
+			continue;
 		}
-
-		if (urls) {
-			for(var j in urls) {
-				if (current.indexOf(urls[j]) !== -1) {
-					bUrlValid = true;
-				}
-			}
-		}
-
-		if (filetypes) {
-			for(var j in filetypes) {
-				if (ifilename.indexOf(filetypes[j]) !== -1) {
-					bFiletypeValid = true;
-				}
-			}
-		}
-
-		if ((!urls && bFiletypeValid) || (!filetypes && bUrlValid) || (bUrlValid && bFiletypeValid)){
+		if (current.indexOf(localStorage.key(i)) !== -1){
 			ifilename = localStorage[localStorage.key(i)] + '/' + item.filename;
 		}
+	}
+	if((localStorage.torrents == 'true') && (jfilename.indexOf('.torrent') !== -1)) {
+		console.log("Torrents added because localStorage.torrents = " + localStorage.torrents);
+		ifilename = 'Torrents/' + ifilename;
+	}
+	if((localStorage.music == 'true') && ((jfilename.indexOf('.mp3') !== -1) || (jfilename.indexOf('.wav') !== -1))) {
+		ifilename = 'Music/' + ifilename;
+	}
+	if((localStorage.images == 'true') && ((jfilename.indexOf('.jpg') !== -1) || (jfilename.indexOf('.png') !== -1))) {
+		ifilename = 'Images/' + ifilename;
+	}
+	if((localStorage.docs == 'true') && ((jfilename.indexOf('.doc') !== -1) || (jfilename.indexOf('.ppt') !== -1) || (jfilename.indexOf('.rtf') !== -1) || (jfilename.indexOf('.xls') !== -1) || (jfilename.indexOf('.pdf') !== -1) || (jfilename.indexOf('.txt') !== -1) || (jfilename.indexOf('.xls') !== -1))) {
+		ifilename = 'Documents/' + ifilename;
+	}
+	if((localStorage.arch == 'true') && ((jfilename.indexOf('.zip') !== -1) || (jfilename.indexOf('.rar') !== -1) || (jfilename.indexOf('.dmg') !== -1))) {
+		ifilename = 'Archives/' + ifilename;
 	}
 
 	suggest({filename: ifilename, overwrite: false});
